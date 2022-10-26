@@ -9,7 +9,6 @@
 template<typename T>
 struct Monitor {
 	using Object = T;
-	using This = T*;
 	using That = T&;
 
 protected:
@@ -27,8 +26,8 @@ public:
 // Making it public allows for composibility allowing for a more "Composition" based architecture.
 // If the latter is chosen, the functions can change to operators `=` and `()` respectively.
 //
-// IMO, keeping it private should be the default use because it allows for more self documenting classes.
-// You dont have to look around to understand what a "Promiser" is, just the inherited Monitor class.
+// IMO being protected should be the default because the inheritance should be just one level deep.
+// For example: Monitor <- Promiser and thats it.
 protected:
 
 	auto invoke(std::invocable<That> auto fn) -> auto {
@@ -36,6 +35,7 @@ protected:
 		return fn(obj);
 	}
 
+	// For when we know our Object has its own safety
 	auto invoke_unsafe(std::invocable<That> auto fn) -> auto {
 		return fn(obj);
 	}
