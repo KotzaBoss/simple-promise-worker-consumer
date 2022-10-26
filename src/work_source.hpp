@@ -2,50 +2,68 @@
 
 #include <cassert>
 #include <thread>
-#include <chrono>
-using namespace std::chrono_literals;
+#include <optional>
 #include <string>
+#include<concepts>
 
 #include "promiser.hpp"
 
-struct WorkDone : std::runtime_error {
-	WorkDone()
-		: runtime_error("WorkSource is DONE")
+struct WorkerError : std::runtime_error {
+	WorkerError(const std::string& what)
+		: runtime_error(what)
+	{}
+	WorkerError(const std::runtime_error& other)
+		: runtime_error(other)
 	{}
 };
 
-struct WorkSource : Promiser<size_t> {
-	using Future = Promiser<size_t>::Future;
+struct WorkerDone : WorkerError {
+	WorkerDone()
+		: WorkerError("Done")
+	{}
+};
+
+template<typename Product>
+struct Worker : Promiser<Product> {
+	using Future = Promiser<Product>::Future;
 
 private:
 	std::jthread loop;
+
+protected:
+	virtual auto setup() -> void = 0;
+	/** Must throw a derivative of WorkerError to communicate error through set_exception */
+	virtual auto work() -> Product = 0;
+
 public:
-	WorkSource()
-		: loop {std::jthread([this](auto stoken) {
-				auto counter = 0ul;
-				while (not stoken.stop_requested()) {
-					using namespace std::chrono;
+	Worker() = default;
 
-					// This sequence EMPIRICALLY produces fewer future_already_retrieved exceptions
-					set_value(counter++);
-					reset();
-					std::this_thread::sleep_for(milliseconds((std::rand() % 50) + 5));
-				}
-			})
-		}
-	{}
-
-	~WorkSource() {
+	~Worker() {
 		assert(loop.get_stop_token().stop_requested());
 	}
 
-	auto future_work() -> Future {
-		return get_future();
+	auto start() {
+		loop = std::jthread([this](auto stoken) {
+			setup();
+			while (not stoken.stop_requested()) {
+				try {
+					this->set_value(work());
+				}
+				catch(const WorkerError& e) {	// TODO: how to propagate the type of the exception thrown in work()?
+					this->set_exception(e);
+				}
+				this->reset();
+			}
+			this->set_exception(WorkerDone());
+		});
 	}
 
 	auto stop() {
-		set_exception(WorkDone());
 		loop.request_stop();
+	}
+
+	auto future_work() -> Future {
+		return this->get_future();
 	}
 };
 
