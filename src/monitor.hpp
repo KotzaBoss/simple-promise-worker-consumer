@@ -13,7 +13,7 @@ struct Monitor {
 
 protected:
 	Object obj;
-	mutable std::mutex m;
+	std::mutex m;
 
 public:
 	template<typename... Args>
@@ -37,7 +37,6 @@ public:
 		obj = std::move(o);
 		return *this;
 	}
-
 };
 
 #undef LOCK_GUARD

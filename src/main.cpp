@@ -39,7 +39,7 @@ auto main() -> int {
 		}
 	});
 
-	std::this_thread::sleep_for(5s);
+	std::this_thread::sleep_for(3s);
 
 	consumer.request_stop();
 	ws.stop();

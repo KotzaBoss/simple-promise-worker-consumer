@@ -29,7 +29,7 @@ public:
 					// This sequence EMPIRICALLY produces fewer future_already_retrieved exceptions
 					set_value(counter++);
 					reset();
-					std::this_thread::sleep_for(milliseconds((std::rand() % 250) + 50));
+					std::this_thread::sleep_for(milliseconds((std::rand() % 50) + 5));
 				}
 			})
 		}
