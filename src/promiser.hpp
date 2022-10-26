@@ -17,11 +17,11 @@ private:
 
 public:
 	auto get_future() -> Future {
-		return monitor([](auto& p) { return p.get_future(); });
+		return monitor.invoke([](auto& p) { return p.get_future(); });
 	}
 
 	auto reset() -> void {
-		monitor = Promise{};
+		monitor.invoke([](auto& p) { p = Promise{}; });
 	}
 
 	auto set_value(PromisedType&& v) -> void {

@@ -12,8 +12,8 @@ struct Monitor {
 	using That = T&;
 
 protected:
-	Object obj;
-	std::mutex m;
+	mutable Object obj;
+	mutable std::mutex m;
 
 public:
 	template<typename... Args>
@@ -22,20 +22,14 @@ public:
 	{}
 
 public:
-	auto operator() (std::invocable<That> auto fn) -> auto {
+	auto invoke(std::invocable<That> auto fn) const -> auto {
 		LOCK_GUARD(m);
 		return fn(obj);
 	}
 
 	// For when we know our Object has its own safety
-	auto unsafe_invoke(std::invocable<That> auto fn) -> auto {
+	auto unsafe_invoke(std::invocable<That> auto fn) const -> auto {
 		return fn(obj);
-	}
-
-	auto operator= (Object&& o) -> Monitor& {
-		LOCK_GUARD(m);
-		obj = std::move(o);
-		return *this;
 	}
 };
 
