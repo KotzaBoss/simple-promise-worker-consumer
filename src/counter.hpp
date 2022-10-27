@@ -26,7 +26,7 @@ protected:
 		if (std::rand() % 10 > 8)
 			throw CounterError(counter);
 		else
-			return counter++;	// Like above trivial only here
+			return counter++;
 	}
 
 public:
