@@ -6,6 +6,7 @@
 
 #define LOCK_GUARD(m) const auto _ = std::lock_guard{m}
 
+// Inspired by Herb Sutter: https://stackoverflow.com/questions/60522330/how-does-herb-sutters-monitor-class-work
 template<typename T>
 struct Monitor {
 	using Object = T;
