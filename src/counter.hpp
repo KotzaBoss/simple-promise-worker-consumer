@@ -13,8 +13,11 @@ struct CounterError : WorkerError {
 };
 
 struct Counter : Worker<size_t> {
+	using Worker = Worker<size_t>;
+
 private:
 	size_t counter = 0;
+
 protected:
 	auto work() -> size_t override {
 		using namespace std::chrono;
@@ -24,6 +27,11 @@ protected:
 			throw CounterError(counter);
 		else
 			return counter++;	// Like above trivial only here
+	}
+
+public:
+	auto future_counter() -> Worker::Future {
+		return future_work();
 	}
 };
 
