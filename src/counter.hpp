@@ -3,7 +3,7 @@
 #include <chrono>
 using namespace std::chrono_literals;
 
-#include "work_source.hpp"
+#include "worker.hpp"
 
 struct CounterError : WorkerError {
 	CounterError()
@@ -13,17 +13,13 @@ struct CounterError : WorkerError {
 
 struct Counter : Worker<size_t> {
 private:
-	size_t counter;
+	size_t counter = 0;
 protected:
-	auto setup() -> void override {
-		counter = 0;	// Trivial but irl theres more code like opening ports, starting streams etc
-	}
-
 	auto work() -> size_t override {
 		using namespace std::chrono;
 
 		std::this_thread::sleep_for(milliseconds(std::rand() % 50 + 10));
-		if (std::rand() % 2 == 1)
+		if (std::rand() % 10 > 8)
 			throw CounterError();
 		else
 			return counter++;	// Like above trivial only here

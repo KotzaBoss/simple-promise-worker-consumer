@@ -23,6 +23,8 @@ struct WorkerDone : WorkerError {
 	{}
 };
 
+/**	Unfortunately this-> is required to access the promiser's methods.
+ *	It has to do with how C++ looks up "unqualified" names but i lost the sauce. */
 template<typename Product>
 struct Worker : Promiser<Product> {
 	using Future = Promiser<Product>::Future;
@@ -31,8 +33,7 @@ private:
 	std::jthread loop;
 
 protected:
-	virtual auto setup() -> void = 0;
-	/** Must throw a derivative of WorkerError to communicate error through set_exception */
+	/** Must throw an exception to communicate error through set_exception */
 	virtual auto work() -> Product = 0;
 
 public:
@@ -42,19 +43,19 @@ public:
 		assert(loop.get_stop_token().stop_requested());
 	}
 
+	/** Assumes the subclass has performed its setup in the constructor */
 	auto start() {
 		loop = std::jthread([this](auto stoken) {
-			setup();
 			while (not stoken.stop_requested()) {
 				try {
 					this->set_value(work());
 				}
-				catch(const WorkerError& e) {	// TODO: how to propagate the type of the exception thrown in work()?
-					this->set_exception(e);
+				catch (...) {
+					this->set_exception(std::current_exception());
 				}
 				this->reset();
 			}
-			this->set_exception(WorkerDone());
+			this->set_exception(std::make_exception_ptr(WorkerDone()));
 		});
 	}
 

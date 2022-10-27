@@ -28,8 +28,9 @@ public:
 		monitor.unsafe_invoke([v = std::move(v)](auto& p) { p.set_value(v); });
 	}
 
-	auto set_exception(auto&& e) -> void {
-		monitor.unsafe_invoke([e = std::move(e)](auto& p) { p.set_exception(std::make_exception_ptr(e)); });
+	/** Needed for sane "exception polymorphism" when subclass errors are being set */
+	auto set_exception(std::exception_ptr e) {
+		monitor.unsafe_invoke([e = std::move(e)](auto& p) { p.set_exception(e); });
 	}
 };
 
