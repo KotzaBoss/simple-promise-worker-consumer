@@ -25,12 +25,12 @@ public:
 public:
 	auto invoke(std::invocable<That> auto fn) const -> auto {
 		LOCK_GUARD(m);
-		return fn(obj);
+		return std::invoke(fn, obj);
 	}
 
 	// For when we know our Object has its own safety
 	auto unsafe_invoke(std::invocable<That> auto fn) const -> auto {
-		return fn(obj);
+		return std::invoke(fn, obj);
 	}
 };
 
