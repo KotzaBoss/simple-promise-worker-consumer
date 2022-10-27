@@ -39,7 +39,7 @@ auto main() -> int {
 					<< "Consumed values are" << (is_sequential(consumed_work) ? " " : " NOT ") << "sequential\n";
 				return;
 			}
-			catch (const CounterError& e) {	// TODO: Should be CounterError somehow
+			catch (const CounterError& e) {
 				std::cerr << e.what() << '\n';
 				continue;
 			}

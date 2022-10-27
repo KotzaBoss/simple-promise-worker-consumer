@@ -1,13 +1,14 @@
 #pragma once
 
 #include <chrono>
-using namespace std::chrono_literals;
+#include <string>
+using namespace std::literals;
 
 #include "worker.hpp"
 
 struct CounterError : WorkerError {
-	CounterError()
-		: WorkerError("Counter is busted")
+	CounterError(const size_t current_counter)
+		: WorkerError("Counter is busted at "s + std::to_string(current_counter))
 	{}
 };
 
@@ -20,7 +21,7 @@ protected:
 
 		std::this_thread::sleep_for(milliseconds(std::rand() % 50 + 10));
 		if (std::rand() % 10 > 8)
-			throw CounterError();
+			throw CounterError(counter);
 		else
 			return counter++;	// Like above trivial only here
 	}

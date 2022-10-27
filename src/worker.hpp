@@ -37,8 +37,6 @@ protected:
 	virtual auto work() -> Product = 0;
 
 public:
-	Worker() = default;
-
 	~Worker() {
 		assert(loop.get_stop_token().stop_requested());
 	}
