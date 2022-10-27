@@ -17,6 +17,7 @@ auto main() -> int {
 
 	auto consumer = std::jthread([&counter]() {
 		auto consumed_work = std::vector<size_t>();
+		consumed_work.reserve(70);
 
 		while (true) {
 			try {
