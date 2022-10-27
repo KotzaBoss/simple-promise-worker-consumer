@@ -12,9 +12,6 @@ struct WorkerError : std::runtime_error {
 	WorkerError(const std::string& what)
 		: runtime_error(what)
 	{}
-	WorkerError(const std::runtime_error& other)
-		: runtime_error(other)
-	{}
 };
 
 struct WorkerDone : WorkerError {
