@@ -15,7 +15,7 @@ struct Promiser {
 private:
 	Monitor<Promise> monitor;
 
-protected:
+public:
 	/** Should be wrapped with a function to rename the context of the future. Eg. future_frame, future_client, ... */
 	auto get_future() -> Future {
 		return monitor.invoke([](auto& p) { return p.get_future(); });
