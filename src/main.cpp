@@ -31,6 +31,10 @@ auto main() -> int {
 				std::cerr << "Consumer is too fast for the WorkSource: " << e.what() << '\n';
 				continue;
 			}
+			catch (const CounterError& e) {
+				std::cerr << e.what() << '\n';
+				continue;
+			}
 			catch (const WorkerDone& e) {
 				std::cerr << e.what() << "\n\n"
 					<< "Values consumed:\n" ;
@@ -38,10 +42,6 @@ auto main() -> int {
 				std::cerr << '\n'
 					<< "Consumed values are" << (is_sequential(consumed_work) ? " " : " NOT ") << "sequential\n";
 				return;
-			}
-			catch (const CounterError& e) {
-				std::cerr << e.what() << '\n';
-				continue;
 			}
 		}
 	});

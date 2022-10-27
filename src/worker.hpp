@@ -14,10 +14,8 @@ struct WorkerError : std::runtime_error {
 	{}
 };
 
-struct WorkerDone : WorkerError {
-	WorkerDone()
-		: WorkerError("Done")
-	{}
+struct WorkerDone final : std::exception {
+	auto what() const noexcept -> const char* override { return "Worker is done"; }
 };
 
 /**	Unfortunately this-> is required to access the promiser's methods.
