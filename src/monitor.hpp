@@ -4,8 +4,6 @@
 #include <mutex>
 #include <concepts>
 
-#define LOCK_GUARD(m) const auto _ = std::lock_guard{m}
-
 // Inspired by Herb Sutter: https://stackoverflow.com/questions/60522330/how-does-herb-sutters-monitor-class-work
 template<typename T>
 struct Monitor {
@@ -24,7 +22,7 @@ public:
 
 public:
 	auto invoke(std::invocable<That> auto fn) const -> auto {
-		LOCK_GUARD(m);
+		const auto _ = std::lock_guard{m};
 		return std::invoke(fn, obj);
 	}
 
@@ -33,6 +31,4 @@ public:
 		return std::invoke(fn, obj);
 	}
 };
-
-#undef LOCK_GUARD
 
