@@ -27,7 +27,6 @@ auto main() -> int {
 				continue;
 			}
 			catch (const std::future_error& e) {
-				std::cerr << e.what() << '\n';
 				assert(e.code() == std::future_errc::future_already_retrieved);
 				std::cerr << "Consumer is too fast for the WorkSource: " << e.what() << '\n';
 				continue;
