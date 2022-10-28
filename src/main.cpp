@@ -6,7 +6,7 @@ namespace rs = std::ranges;
 
 #include "counter.hpp"
 
-auto is_sequential(const std::vector<size_t>& work) -> bool {
+auto is_sequential(const std::vector<size_t>& work) noexcept -> bool {
 	return rs::all_of(work,
 		[start = work.front()](const auto& x) mutable { return x == start++; }
 	);
@@ -15,7 +15,7 @@ auto is_sequential(const std::vector<size_t>& work) -> bool {
 auto main() -> int {
 	auto counter = Counter();
 
-	auto consumer = std::jthread([&counter]() {
+	auto consumer = std::jthread([&counter]() noexcept {
 		auto consumed_work = std::vector<size_t>();
 		consumed_work.reserve(70);
 

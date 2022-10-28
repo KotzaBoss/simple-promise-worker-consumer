@@ -32,12 +32,12 @@ protected:
 	virtual auto work() -> Product = 0;
 
 public:
-	~Worker() {
+	~Worker() noexcept {
 		assert(loop.get_stop_token().stop_requested());
 	}
 
 	/** Assumes the subclass has performed its setup in the constructor */
-	auto start() {
+	auto start() noexcept {
 		loop = std::jthread([this](auto stoken) {
 			while (not stoken.stop_requested()) {
 				try {
@@ -52,7 +52,7 @@ public:
 		});
 	}
 
-	auto stop() {
+	auto stop() noexcept {
 		loop.request_stop();
 	}
 
