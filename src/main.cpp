@@ -1,12 +1,13 @@
 #include <iostream>
 #include <vector>
+#include <span>
 #include <ranges>
 #include <algorithm>
 namespace rs = std::ranges;
 
 #include "counter.hpp"
 
-auto is_sequential(const std::vector<size_t>& work) noexcept -> bool {
+auto is_sequential(const std::span<size_t> work) noexcept -> bool {
 	return rs::all_of(work,
 		[start = work.front()](const auto& x) mutable { return x == start++; }
 	);
