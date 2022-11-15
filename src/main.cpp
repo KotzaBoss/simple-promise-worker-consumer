@@ -36,7 +36,7 @@ auto main() -> int {
 				std::cerr << e.what() << '\n';
 				continue;
 			}
-			catch (const WorkerDone& e) {
+			catch (const CounterDone& e) {
 				std::cerr << e.what() << "\n\n"
 					<< "Values consumed:\n" ;
 				rs::for_each(consumed_work, [](const auto& x) { std::cerr << x << ' '; });

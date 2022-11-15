@@ -12,6 +12,8 @@ struct CounterError : WorkerError {
 	{}
 };
 
+using CounterDone = WorkerDone;
+
 struct Counter : Worker<size_t> {
 	using Worker = Worker<size_t>;
 
