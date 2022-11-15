@@ -22,7 +22,7 @@ auto main() -> int {
 
 		while (true) {
 			try {
-				const auto work = counter.future_counter().get();
+				const auto work = counter.future_value().get();
 				std::cerr << work << '\n';
 				consumed_work.push_back(work);
 				continue;

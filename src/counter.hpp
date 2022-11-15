@@ -30,7 +30,7 @@ protected:
 	}
 
 public:
-	auto future_counter() -> Worker::Future {
+	auto future_value() -> Worker::Future {
 		return future_work();
 	}
 };
