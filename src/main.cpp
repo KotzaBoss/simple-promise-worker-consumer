@@ -14,7 +14,7 @@ auto is_sequential(const std::span<size_t> work) noexcept -> bool {
 }
 
 auto main() -> int {
-	auto counter = Counter();
+	auto counter = MaybeBustedCounter();
 
 	auto consumer = std::jthread([&counter]() noexcept {
 		auto consumed_work = std::vector<size_t>();
@@ -32,11 +32,11 @@ auto main() -> int {
 				std::cerr << "Consumer is too fast for the WorkSource: " << e.what() << '\n';
 				continue;
 			}
-			catch (const CounterError& e) {
+			catch (const MaybeBustedCounterError& e) {
 				std::cerr << e.what() << '\n';
 				continue;
 			}
-			catch (const CounterDone& e) {
+			catch (const MaybeBustedCounterDone& e) {
 				std::cerr << e.what() << "\n\n"
 					<< "Values consumed:\n" ;
 				rs::for_each(consumed_work, [](const auto& x) { std::cerr << x << ' '; });

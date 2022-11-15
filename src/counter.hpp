@@ -6,15 +6,15 @@ using namespace std::literals;
 
 #include "worker.hpp"
 
-struct CounterError : WorkerError {
-	CounterError(const size_t current_counter)
+struct MaybeBustedCounterError : WorkerError {
+	MaybeBustedCounterError(const size_t current_counter)
 		: WorkerError("Counter is busted at "s + std::to_string(current_counter))
 	{}
 };
 
-using CounterDone = WorkerDone;
+using MaybeBustedCounterDone = WorkerDone;
 
-struct Counter : Worker<size_t> {
+struct MaybeBustedCounter : Worker<size_t> {
 	using Worker = Worker<size_t>;
 
 private:
@@ -26,7 +26,7 @@ protected:
 
 		std::this_thread::sleep_for(milliseconds(std::rand() % 50 + 10));
 		if (std::rand() % 10 > 8)
-			throw CounterError(counter);
+			throw MaybeBustedCounterError(counter);
 		else
 			return counter++;
 	}
